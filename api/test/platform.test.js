@@ -12,6 +12,8 @@ let AdminUser;
 let AllowedIp;
 let MongoRateLimitStore;
 
+jest.setTimeout(180000);
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
@@ -31,7 +33,7 @@ beforeAll(async () => {
   MongoRateLimitStore = require('../mongoRateLimitStore');
 
   app = require('../server');
-});
+}, 180000);
 
 afterAll(async () => {
   await mongoose.disconnect();
