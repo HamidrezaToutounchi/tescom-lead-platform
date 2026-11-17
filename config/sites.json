@@ -1,0 +1,78 @@
+[
+  {
+    "domain": "fanvilpartner.com",
+    "brand": "fanvil",
+    "displayName": "Fanvil Partner",
+    "refPrefix": "FVL",
+    "repoDir": "FanvilLandingPage",
+    "buildCmd": "npm ci && npm run build",
+    "outDir": "dist",
+    "requestTypes": {
+      "bilgi": "Ürün Hakkında Bilgi & Fiyat Al",
+      "proje": "FPRS Proje Kaydı & Özel İskonto",
+      "bayi": "Alt Bayilik / Partner Başvurusu",
+      "demo": "2-Wire / Teknik Demo Talebi"
+    },
+    "extraImgSrc": [
+      "https://www.fanvil.com",
+      "https://fanvil.com"
+    ]
+  },
+  {
+    "domain": "jabrapanacast.com.tr",
+    "brand": "jabra",
+    "displayName": "Jabra PanaCast",
+    "refPrefix": "JPC",
+    "repoDir": "jabrapanacast.com.tr",
+    "buildCmd": "npm ci && npm run build",
+    "outDir": "out",
+    "requestTypes": {
+      "bilgi": "Ürün Bilgi & Fiyat Teklifi",
+      "demo": "Toplantı Odası Demo / Test Talebi",
+      "kesif": "Yerinde Oda Keşif Talebi",
+      "proje": "Kurumsal Toplu Proje Alımı"
+    },
+    "extraImgSrc": [
+      "https://assets2.jabra.com",
+      "https://www.jabra.com"
+    ]
+  },
+  {
+    "domain": "jabrapartner.com.tr",
+    "brand": "jabra",
+    "displayName": "Jabra Partner",
+    "refPrefix": "JBP",
+    "repoDir": "jabrapartner.com.tr",
+    "buildCmd": "npm ci && npm run build",
+    "outDir": "out",
+    "requestTypes": {
+      "proje": "Kurumsal Proje Kaydı & İskonto",
+      "teklif": "Toplu Ürün & Fiyat Teklifi",
+      "demo": "Test / Demo Cihaz Talebi",
+      "bilgi": "Ürün & Çözüm Danışmanlığı"
+    },
+    "extraImgSrc": [
+      "https://assets2.jabra.com",
+      "https://www.jabra.com"
+    ]
+  },
+  {
+    "domain": "jabravideokonferans.com",
+    "brand": "jabra",
+    "displayName": "Jabra Video Konferans",
+    "refPrefix": "JVK",
+    "repoDir": "jabravideokonferans.com",
+    "buildCmd": "npm ci && npm run build",
+    "outDir": "out",
+    "requestTypes": {
+      "teklif": "Oda Çözümü Fiyat Teklifi",
+      "kesif": "Toplantı Odası Keşif Talebi",
+      "demo": "Test & Demo Cihaz Talebi",
+      "proje": "Kurumsal Toplantı Odası Projesi"
+    },
+    "extraImgSrc": [
+      "https://assets2.jabra.com",
+      "https://www.jabra.com"
+    ]
+  }
+]
