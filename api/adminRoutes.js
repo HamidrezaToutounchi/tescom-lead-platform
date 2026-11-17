@@ -592,6 +592,7 @@ router.get('/leads', requireAuth, async (req, res) => {
 
     return res.json({
       ok: true,
+      items: leads,
       leads,
       total,
       page,
@@ -982,7 +983,7 @@ router.post('/mail-settings/send-test-mail', requireAdminRole, async (req, res) 
 router.get('/recipients', requireAdminRole, async (_req, res) => {
   try {
     const recipients = await MailRecipient.find().sort({ createdAt: -1 }).lean();
-    return res.json({ ok: true, recipients });
+    return res.json({ ok: true, recipients, items: recipients });
   } catch (err) {
     return res.status(500).json({ ok: false, error: 'Alıcılar listelenemedi.' });
   }
@@ -1177,7 +1178,7 @@ router.get('/users', requireAdminRole, async (_req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    return res.json({ ok: true, users });
+    return res.json({ ok: true, users, items: users });
   } catch (err) {
     return res.status(500).json({ ok: false, error: 'Kullanıcılar listelenemedi.' });
   }
