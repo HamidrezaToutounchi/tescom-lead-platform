@@ -1,0 +1,21 @@
+[caddy-abuse]
+enabled  = true
+filter   = caddy-abuse
+logpath  = /var/log/caddy/*.access.log
+backend  = auto
+maxretry = 5
+findtime = 600
+bantime  = 3600
+banaction = iptables-multiport[actname=caddy-abuse, chain=DOCKER-USER]
+port     = 80,443
+
+[caddy-scan]
+enabled  = true
+filter   = caddy-scan
+logpath  = /var/log/caddy/*.access.log
+backend  = auto
+maxretry = 2
+findtime = 3600
+bantime  = 86400
+banaction = iptables-multiport[actname=caddy-scan, chain=DOCKER-USER]
+port     = 80,443

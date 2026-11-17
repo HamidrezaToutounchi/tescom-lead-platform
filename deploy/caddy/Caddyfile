@@ -1,0 +1,287 @@
+# ===========================================================================
+# Auto-generated Caddyfile from config/sites.json
+# Generated on: 2026-11-17T11:07:13.290Z
+# DO NOT EDIT DIRECTLY. Run 'node deploy/generate-caddyfile.js' to regenerate.
+# ===========================================================================
+
+{
+  email {$ACME_EMAIL:destek@tescom.com.tr}
+  order rate_limit before basicauth
+}
+
+# ---------------------------------------------------------------------------
+# Site: Fanvil Partner (fanvilpartner.com)
+# ---------------------------------------------------------------------------
+fanvilpartner.com, www.fanvilpartner.com {
+  # Security Headers
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  # Rate Limiting via caddy-ratelimit (IP-based)
+  rate_limit {
+    zone leads_fvl {
+      key {remote_host}
+      events 10
+      window 1m
+      match {
+        path /api/leads
+        method POST
+      }
+    }
+    zone global_fvl {
+      key {remote_host}
+      events 300
+      window 1m
+    }
+  }
+
+  # Reverse Proxy: Unified Lead API (2 replicas via Docker internal DNS round-robin)
+  handle /api/* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Reverse Proxy: Unified Admin SPA (IP allowlist enforced by lead-api)
+  handle /admin* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Static Website Frontend
+  handle {
+    root * /srv/sites/fanvilpartner.com
+    file_server
+    try_files {path} {path}/ /index.html
+  }
+
+  # Access Logs
+  log {
+    output file /var/log/caddy/fanvilpartner.com.access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Site: Jabra PanaCast (jabrapanacast.com.tr)
+# ---------------------------------------------------------------------------
+jabrapanacast.com.tr, www.jabrapanacast.com.tr {
+  # Security Headers
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  # Rate Limiting via caddy-ratelimit (IP-based)
+  rate_limit {
+    zone leads_jpc {
+      key {remote_host}
+      events 10
+      window 1m
+      match {
+        path /api/leads
+        method POST
+      }
+    }
+    zone global_jpc {
+      key {remote_host}
+      events 300
+      window 1m
+    }
+  }
+
+  # Reverse Proxy: Unified Lead API (2 replicas via Docker internal DNS round-robin)
+  handle /api/* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Reverse Proxy: Unified Admin SPA (IP allowlist enforced by lead-api)
+  handle /admin* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Static Website Frontend
+  handle {
+    root * /srv/sites/jabrapanacast.com.tr
+    file_server
+    try_files {path} {path}/ /index.html
+  }
+
+  # Access Logs
+  log {
+    output file /var/log/caddy/jabrapanacast.com.tr.access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Site: Jabra Partner (jabrapartner.com.tr)
+# ---------------------------------------------------------------------------
+jabrapartner.com.tr, www.jabrapartner.com.tr {
+  # Security Headers
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  # Rate Limiting via caddy-ratelimit (IP-based)
+  rate_limit {
+    zone leads_jbp {
+      key {remote_host}
+      events 10
+      window 1m
+      match {
+        path /api/leads
+        method POST
+      }
+    }
+    zone global_jbp {
+      key {remote_host}
+      events 300
+      window 1m
+    }
+  }
+
+  # Reverse Proxy: Unified Lead API (2 replicas via Docker internal DNS round-robin)
+  handle /api/* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Reverse Proxy: Unified Admin SPA (IP allowlist enforced by lead-api)
+  handle /admin* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Static Website Frontend
+  handle {
+    root * /srv/sites/jabrapartner.com.tr
+    file_server
+    try_files {path} {path}/ /index.html
+  }
+
+  # Access Logs
+  log {
+    output file /var/log/caddy/jabrapartner.com.tr.access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Site: Jabra Video Konferans (jabravideokonferans.com)
+# ---------------------------------------------------------------------------
+jabravideokonferans.com, www.jabravideokonferans.com {
+  # Security Headers
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  # Rate Limiting via caddy-ratelimit (IP-based)
+  rate_limit {
+    zone leads_jvk {
+      key {remote_host}
+      events 10
+      window 1m
+      match {
+        path /api/leads
+        method POST
+      }
+    }
+    zone global_jvk {
+      key {remote_host}
+      events 300
+      window 1m
+    }
+  }
+
+  # Reverse Proxy: Unified Lead API (2 replicas via Docker internal DNS round-robin)
+  handle /api/* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Reverse Proxy: Unified Admin SPA (IP allowlist enforced by lead-api)
+  handle /admin* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Static Website Frontend
+  handle {
+    root * /srv/sites/jabravideokonferans.com
+    file_server
+    try_files {path} {path}/ /index.html
+  }
+
+  # Access Logs
+  log {
+    output file /var/log/caddy/jabravideokonferans.com.access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
+
