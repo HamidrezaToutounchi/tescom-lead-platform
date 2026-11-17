@@ -3,6 +3,7 @@ services:
     build: ./caddy
     container_name: tescom-caddy
     restart: unless-stopped
+    mem_limit: 256m
     ports:
       - "80:80"
       - "443:443"
@@ -12,24 +13,33 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-      - /srv/sites:/srv/sites:ro
+      - ${SITES_DIST:-/opt/tescom/sites-dist}:/srv/sites:ro
       - /var/log/caddy:/var/log/caddy
     networks:
       - frontend_net
     depends_on:
       lead-api:
         condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   lead-api:
     build:
       context: ..
       dockerfile: api/Dockerfile
     restart: unless-stopped
+    mem_limit: 384m
     deploy:
       replicas: 2
+    labels:
+      autoheal: "true"
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NODE_OPTIONS=--max-old-space-size=256
       - MONGO_URI=mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/tescom?authSource=tescom
       - SESSION_SECRET=${SESSION_SECRET}
       - SETTINGS_ENC_KEY=${SETTINGS_ENC_KEY}
@@ -48,11 +58,20 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   mongo:
-    image: mongo:7.0
+    image: mongo:7.0.14
     container_name: tescom-mongo
     restart: unless-stopped
+    mem_limit: 1g
+    command: ["--wiredTigerCacheSizeGB", "0.5"]
+    labels:
+      autoheal: "true"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
@@ -70,6 +89,29 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: tescom-autoheal
+    restart: unless-stopped
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=autoheal
+      - AUTOHEAL_INTERVAL=10
+      - AUTOHEAL_START_PERIOD=30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - frontend_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   frontend_net:

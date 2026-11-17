@@ -2,9 +2,26 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 CONFIG_FILE="${SCRIPT_DIR}/../config/sites.json"
-TARGET_BASE_DIR="/srv/sites"
+ENV_FILE="${SCRIPT_DIR}/.env"
+
+# Load environment variables if deploy/.env exists
+if [[ -f "${ENV_FILE}" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "${ENV_FILE}" 2>/dev/null || true
+  set +a
+fi
+
+SITES_ROOT="${SITES_ROOT:-/opt/tescom/sites}"
+SITES_DIST="${SITES_DIST:-/opt/tescom/sites-dist}"
+TARGET_BASE_DIR="${SITES_DIST}"
+
+# Export Turnstile site keys for Vite and Next.js frontends
+if [[ -n "${TURNSTILE_SITE_KEY:-}" ]]; then
+  export VITE_TURNSTILE_SITE_KEY="${TURNSTILE_SITE_KEY}"
+  export NEXT_PUBLIC_TURNSTILE_SITE_KEY="${TURNSTILE_SITE_KEY}"
+fi
 
 if [[ ! -f "${CONFIG_FILE}" ]]; then
   echo "[HATA] sites.json bulunamadı: ${CONFIG_FILE}" >&2
@@ -15,8 +32,9 @@ mkdir -p "${TARGET_BASE_DIR}"
 
 echo "=========================================================="
 echo "Tescom Platform Frontend Build Başlatılıyor"
-echo "Kök Klasör: ${PROJECT_ROOT}"
-echo "Hedef Dizin: ${TARGET_BASE_DIR}"
+echo "Siteler Kök Dizini (SITES_ROOT): ${SITES_ROOT}"
+echo "Dağıtım Hedef Dizini (SITES_DIST): ${TARGET_BASE_DIR}"
+echo "Turnstile Site Key: ${TURNSTILE_SITE_KEY:-(tanımlı değil)}"
 echo "=========================================================="
 
 # Parse sites.json using node
@@ -30,7 +48,7 @@ sites.forEach(s => {
   echo ""
   echo ">>> [BUILD] Site: ${domain} (Klasör: ${repoDir})"
 
-  SITE_DIR="${PROJECT_ROOT}/${repoDir}"
+  SITE_DIR="${SITES_ROOT}/${repoDir}"
   if [[ ! -d "${SITE_DIR}" ]]; then
     echo "[UYARI] Klasör bulunamadı: ${SITE_DIR}, atlanıyor." >&2
     continue

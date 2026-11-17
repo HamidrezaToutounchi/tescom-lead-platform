@@ -1,12 +1,12 @@
 # ===========================================================================
 # Auto-generated Caddyfile from config/sites.json
-# Generated on: 2026-11-17T11:07:13.290Z
+# Generated on: 2026-11-17T11:52:37.653Z
 # DO NOT EDIT DIRECTLY. Run 'node deploy/generate-caddyfile.js' to regenerate.
 # ===========================================================================
 
 {
   email {$ACME_EMAIL:destek@tescom.com.tr}
-  order rate_limit before basicauth
+  order rate_limit before basic_auth
 }
 
 # ---------------------------------------------------------------------------

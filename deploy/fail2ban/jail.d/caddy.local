@@ -1,3 +1,11 @@
+# ===========================================================================
+# Fail2ban Caddy Jails for Docker Environment
+# Drops abusive and scanning clients in DOCKER-USER iptables chain
+# ===========================================================================
+
+[DEFAULT]
+banaction = iptables-multiport[chain=DOCKER-USER]
+
 [caddy-abuse]
 enabled  = true
 filter   = caddy-abuse
@@ -6,7 +14,6 @@ backend  = auto
 maxretry = 5
 findtime = 600
 bantime  = 3600
-banaction = iptables-multiport[actname=caddy-abuse, chain=DOCKER-USER]
 port     = 80,443
 
 [caddy-scan]
@@ -17,5 +24,4 @@ backend  = auto
 maxretry = 2
 findtime = 3600
 bantime  = 86400
-banaction = iptables-multiport[actname=caddy-scan, chain=DOCKER-USER]
 port     = 80,443

@@ -41,8 +41,12 @@ cp deploy/.env.example deploy/.env
 nano deploy/.env
 ```
 Gerekli parola ve anahtarları `openssl rand -hex 32` komutuyla üreterek `.env` dosyasını doldurun.
+- `SITES_ROOT`: Sitelerin klonlandığı kök dizin (varsayılan: `/opt/tescom/sites`)
+- `SITES_DIST`: Statik build çıktılarının toplanıp Caddy'ye sunulduğu dizin (varsayılan: `/opt/tescom/sites-dist`)
+- `TURNSTILE_SITE_KEY` & `TURNSTILE_SECRET_KEY`: Cloudflare Turnstile anahtarları
 
 ### Adım 3: Siteleri Derleyin ve Dağıtın
+Siteleri `SITES_ROOT` klasörüne klonlayın ve build scriptini çalıştırın:
 ```bash
 bash deploy/build-sites.sh
 ```

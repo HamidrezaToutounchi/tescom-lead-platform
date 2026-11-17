@@ -22,7 +22,7 @@ let caddyContent = `# ==========================================================
 
 {
   email {$ACME_EMAIL:destek@tescom.com.tr}
-  order rate_limit before basicauth
+  order rate_limit before basic_auth
 }
 
 `;
