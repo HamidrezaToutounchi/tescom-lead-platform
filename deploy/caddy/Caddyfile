@@ -1,6 +1,6 @@
 # ===========================================================================
 # Auto-generated Caddyfile from config/sites.json
-# Generated on: 2026-11-17T11:52:37.653Z
+# Generated on: 2026-11-18T08:20:50.883Z
 # DO NOT EDIT DIRECTLY. Run 'node deploy/generate-caddyfile.js' to regenerate.
 # ===========================================================================
 
@@ -278,6 +278,75 @@ jabravideokonferans.com, www.jabravideokonferans.com {
   # Access Logs
   log {
     output file /var/log/caddy/jabravideokonferans.com.access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Site: Dream Telecom (dreamtelecom.com.tr)
+# ---------------------------------------------------------------------------
+dreamtelecom.com.tr, www.dreamtelecom.com.tr {
+  # Security Headers
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  # Rate Limiting via caddy-ratelimit (IP-based)
+  rate_limit {
+    zone leads_drm {
+      key {remote_host}
+      events 10
+      window 1m
+      match {
+        path /api/leads
+        method POST
+      }
+    }
+    zone global_drm {
+      key {remote_host}
+      events 300
+      window 1m
+    }
+  }
+
+  # Reverse Proxy: Unified Lead API (2 replicas via Docker internal DNS round-robin)
+  handle /api/* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Reverse Proxy: Unified Admin SPA (IP allowlist enforced by lead-api)
+  handle /admin* {
+    reverse_proxy lead-api:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  # Static Website Frontend
+  handle {
+    root * /srv/sites/dreamtelecom.com.tr
+    file_server
+    try_files {path} {path}/ /index.html
+  }
+
+  # Access Logs
+  log {
+    output file /var/log/caddy/dreamtelecom.com.tr.access.log {
       roll_size 50mb
       roll_keep 10
     }

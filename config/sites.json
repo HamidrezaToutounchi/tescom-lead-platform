@@ -74,5 +74,28 @@
       "https://assets2.jabra.com",
       "https://www.jabra.com"
     ]
+  },
+  {
+    "domain": "dreamtelecom.com.tr",
+    "brand": "dreamtelecom",
+    "displayName": "Dream Telecom",
+    "refPrefix": "DRM",
+    "repoDir": "Dreamtelecom.com.tr",
+    "buildCmd": "npm ci && npm run build",
+    "outDir": "dist",
+    "requestTypes": {
+      "teklif": "Fiyat Teklifi Al",
+      "kesif": "Yerinde Keşif Talebi",
+      "demo": "Demo Cihaz Talebi",
+      "bilgi": "Ürün & Çözüm Danışmanlığı"
+    },
+    "extraImgSrc": [
+      "https://www.grandstream.com",
+      "https://grandstream.com",
+      "https://www.fanvil.com",
+      "https://fanvil.com",
+      "https://assets2.jabra.com",
+      "https://www.jabra.com"
+    ]
   }
 ]
